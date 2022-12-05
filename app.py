@@ -89,15 +89,20 @@ def playNote(note, PyAudio, mode):
 
 
 def waveform(hz, m):
-    sampleRate = 44100.0
+    sampleRate = 44100.0 #define sample rate
     if m == 1:
-        note = numpy.sin(numpy.pi*numpy.arange(0,50000,1)*(hz/sampleRate)).astype(numpy.float32)
+        #generation of sine wave
+        r = numpy.sin(numpy.pi*numpy.arange(0,50000,1)*(hz/sampleRate)) #formula for sine wave
+        note = r.astype(numpy.float32)
     elif m == 2:
-        note = numpy.arctan(1/numpy.tan(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)).astype(numpy.float32)
+        #generation of sawtooth wave
+        r = numpy.arctan(1/numpy.tan(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)).astype(numpy.float32) #formula for sawtooth wave
+        note = r.astype(numpy.float32)
     else:
-        r = numpy.round(numpy.sin(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate))
+        #generation of square wave
+        r = numpy.round(numpy.sin(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)) #formula for square wave, math loosely inspired by https://en.wikipedia.org/wiki/Square_wave, modified heavily to fit Numpy library
         note = r.astype(numpy.float32);
-    return note
+    return note #sends written audio to be played
 
 
 
