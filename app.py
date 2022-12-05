@@ -5,6 +5,7 @@ import numpy
 import pyaudio
 import wave
 from pydub import AudioSegment
+import shutil
 
 # import jpype
 # import jpype.imports
@@ -60,35 +61,37 @@ def playNote(note, PyAudio, mode):
         pl.close()
 
         # Writes to wav file
-        writeToWav(n)
+        
+        fileName = "test{i}.wav".format(i=numWavFiles)
+        numWavFiles += 1
+        f = wave.open(fileName, 'wb')
+        f.setnchannels(2)
+        f.setnframes(len(n))
+        f.setsampwidth(1)
+        f.setframerate(44100)
+        f.writeframes(n)
+        f.close()
 
 def playDrum(setting, PyAudio):
-    if setting == 1:
-        f = wave.open("audio/snap.wav", 'rb')
-    elif setting == 2:
-        f = wave.open("audio/kick.wav", 'rb')
-    elif setting == 3:
-        f = wave.open("audio/hat.wav", 'rb')
-    else: 
-        f = wave.open("audio/perc.wav", 'rb')
-    pl = PyAudio.open(format=PyAudio.get_format_from_width(f.getsampwidth()), channels=2, rate=44100, output=True)
-    pl.write(f.readframes(200000))
-    writeToWav(f.readframes(200000))
-    pl.stop_stream()
-    pl.close()
-    f.close()
-    
-
-def writeToWav(data):
     global numWavFiles
     fileName = "test{i}.wav".format(i=numWavFiles)
     numWavFiles += 1
-    f = wave.open(fileName, 'wb')
-    f.setnchannels(2)
-    f.setnframes(len(data))
-    f.setsampwidth(1)
-    f.setframerate(44100)
-    f.writeframes(data)
+    if setting == 1:
+        f = wave.open("audio/snap.wav", 'rb')
+        shutil.copyfile("audio/snap.wav", fileName)
+    elif setting == 2:
+        f = wave.open("audio/kick.wav", 'rb')
+        shutil.copyfile("audio/kick.wav", fileName)
+    elif setting == 3:
+        f = wave.open("audio/hat.wav", 'rb')
+        shutil.copyfile("audio/hat.wav", fileName)
+    else: 
+        f = wave.open("audio/percussion.wav", 'rb')
+        shutil.copyfile("audio/percussion.wav", fileName)
+    pl = PyAudio.open(format=PyAudio.get_format_from_width(f.getsampwidth()), channels=2, rate=44100, output=True)
+    pl.write(f.readframes(200000))
+    pl.stop_stream()
+    pl.close()
     f.close()
 
 
