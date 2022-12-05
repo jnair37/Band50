@@ -1,5 +1,3 @@
-# FLASK SETUP CODE FROM FINANCE:
-
 import os
 
 import math
@@ -16,6 +14,9 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 
 global numWavFiles
+
+# Sets this so we can put a number in the file once we have multiple notes
+numWavFiles = 0
 
 def playNote(note, PyAudio, mode):
 
@@ -69,24 +70,6 @@ def playNote(note, PyAudio, mode):
         f.writeframes(n)
         f.close()
 
-    # pl = PyAudio.open(format = PyAudio.get_format_from_width(width=1), channels=2, rate=44100, input=True, frames_per_buffer=1024)
-
-    # soundStore = []
-    # for i in range(44100//1024):
-    #     test = pl.read(1024)
-    #     soundStore.append(test)
-    # #print(soundStore)
-    # soundStore = bytes(soundStore)
-    # print(type(soundStore))
-
-    # pl.stop_stream()
-    # pl.close()
-    
-    # pl = PyAudio.open(format = PyAudio.get_format_from_width(width=1), channels=2, rate=44100, output=True)
-    # pl.write(soundStore)
-    # pl.stop_stream()
-    # pl.close()
-
 
 def waveform(hz, m):
     sampleRate = 44100.0 #define sample rate
@@ -101,14 +84,11 @@ def waveform(hz, m):
     else:
         #generation of square wave
         r = numpy.round(numpy.sin(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)) #formula for square wave, math loosely inspired by https://en.wikipedia.org/wiki/Square_wave, modified heavily to fit Numpy library
-        note = r.astype(numpy.float32);
+        note = r.astype(numpy.float32)
     return note #sends written audio to be played
 
 
-
-# jpype.startJVM(classpath=['../target/sound.jar'])
-
-# from target import Sound;
+# FLASK SETUP CODE FROM FINANCE:
 
 app = Flask(__name__)
 
@@ -119,9 +99,6 @@ Session(app)
 if not os.environ.get("API_KEY"):
     raise RuntimeError("API_KEY not set")
 
-# Sets this so we can put a number in the file once we have multiple notes
-numWavFiles = 0
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -130,13 +107,8 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-# New flask !
+# New Flask code:
 
-# @app.route("/play")
-# def playFromSite(note):
-#     PyAudio = pyaudio.PyAudio()
-#     playNote(note, PyAudio)
-#     PyAudio.terminate()
 
 @app.route("/")
 @app.route("/index")
