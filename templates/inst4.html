@@ -1,1 +1,17 @@
-{% extends "inst.html" %}
+{% extends "layout.html" %}
+
+{% block main %}
+
+<br>
+<br>
+<br>
+
+<div class="text-center my-auto instrument-txt">
+    <form method="post">
+        <button type="submit" name="button" class="btn button-primary" style="background-color:red; color:white" value=1>Snap</button>
+        <button type="submit" name="button" class="btn button-primary" style="background-color:orange" value=2>Kick</button>
+        <button type="submit" name="button" class="btn button-primary" style="background-color:yellow" value=3>Hi-Hat</button>
+    </form>
+</div>
+
+{% endblock %}

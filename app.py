@@ -60,15 +60,36 @@ def playNote(note, PyAudio, mode):
         pl.close()
 
         # Writes to wav file
-        fileName = "test{i}.wav".format(i=numWavFiles)
-        numWavFiles += 1
-        f = wave.open(fileName, 'wb')
-        f.setnchannels(2)
-        f.setnframes(len(n))
-        f.setsampwidth(1)
-        f.setframerate(44100)
-        f.writeframes(n)
-        f.close()
+        writeToWav(n)
+
+def playDrum(setting, PyAudio):
+    if setting == 1:
+        f = wave.open("audio/snap.wav", 'rb')
+    elif setting == 2:
+        f = wave.open("audio/kick.wav", 'rb')
+    elif setting == 3:
+        f = wave.open("audio/hat.wav", 'rb')
+    else: 
+        f = wave.open("audio/perc.wav", 'rb')
+    pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
+    pl.write(f.readframes(100000))
+    writeToWav(f.readframes(100000))
+    pl.stop_stream()
+    pl.close()
+    f.close()
+    
+
+def writeToWav(data):
+    global numWavFiles
+    fileName = "test{i}.wav".format(i=numWavFiles)
+    numWavFiles += 1
+    f = wave.open(fileName, 'wb')
+    f.setnchannels(2)
+    f.setnframes(len(data))
+    f.setsampwidth(1)
+    f.setframerate(44100)
+    f.writeframes(data)
+    f.close()
 
 
 def waveform(hz, m):
@@ -143,8 +164,12 @@ def inst3():
         PyAudio.terminate()
     return render_template("inst3.html")
 
-@app.route("/inst4")
+@app.route("/inst4", methods=["GET", "POST"])
 def inst4():
+    if (request.method=="POST"):
+        PyAudio = pyaudio.PyAudio()
+        playDrum(int(request.form["button"]), PyAudio)
+        PyAudio.terminate()
     return render_template("inst4.html")
 
 
