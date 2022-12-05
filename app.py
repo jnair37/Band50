@@ -71,7 +71,7 @@ def playDrum(setting, PyAudio):
         f = wave.open("audio/hat.wav", 'rb')
     else: 
         f = wave.open("audio/perc.wav", 'rb')
-    pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
+    pl = PyAudio.open(format=PyAudio.get_format_from_width(f.getsampwidth()), channels=2, rate=44100, output=True)
     pl.write(f.readframes(200000))
     writeToWav(f.readframes(200000))
     pl.stop_stream()
