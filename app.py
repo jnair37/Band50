@@ -15,9 +15,11 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 
 global numWavFiles
+global numDrumFiles
 
 # Sets this so we can put a number in the file once we have multiple notes
 numWavFiles = 0
+numDrumFiles = 0
 
 # Plays a note on one of the 3 non-drum-kit instruments (waveforms)
 def playNote(note, PyAudio, mode):
@@ -26,10 +28,12 @@ def playNote(note, PyAudio, mode):
     freqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440, 493.88]
 
     global numWavFiles
+    global numDrumFiles
 
     # CLEAR feature
     if note == 9:
         numWavFiles = 0
+        numDrumFiles = 0
 
     # PLAYBACK feature
     elif note == 8:
@@ -45,9 +49,32 @@ def playNote(note, PyAudio, mode):
             for i in range(1, len(wavList)):
                 finalFile = finalFile + wavList[i]
                 finalFile.export("test.wav", format="wav")
+            notes = AudioSegment.from_wav("test.wav")
+            if numDrumFiles == 0:
+                overlay = notes
+            
+        if numDrumFiles != 0:
+            # Append all the files to testDrum.wav
+            wavList = []
+            for i in range(numDrumFiles):
+                fileName = "test{j}Drum.wav".format(j=i)
+                wavList.append(AudioSegment.from_wav(fileName))
+            finalFile = wavList[0]
+            for i in range(1, len(wavList)):
+                finalFile = finalFile + wavList[i]
+                finalFile.export("testDrum.wav", format="wav")
+            
+            drums = AudioSegment.from_wav("testDrum.wav")
+            if numWavFiles == 0:
+                overlay = drums
+            else:
+                overlay = notes.overlay(drums)
+    
+        if numWavFiles != 0 or numDrumFiles != 0:
+            overlay.export("testFinal.wav", format="wav")
 
             # Play test.wav
-            f = wave.open("test.wav", 'rb')
+            f = wave.open("testFinal.wav", 'rb')
             pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
             pl.write(f.readframes(100000*numWavFiles))
             pl.stop_stream()
@@ -79,25 +106,62 @@ def playNote(note, PyAudio, mode):
         f.writeframes(n)
         f.close()
 
+def drumSound(mode):
+    sampleRate = 44100.0
+    fileLen = 20000
+    if mode == 1:
+        r = numpy.zeros(fileLen)
+        for i in range(231):
+            r[i] = numpy.sin(numpy.pi*i*(6000-i*3)/sampleRate)
+        note = r.astype(numpy.float32)
+    elif mode == 2:
+        r = numpy.zeros(fileLen)
+        for i in range(96):
+            r[i] = numpy.sin(numpy.pi*i*(6000-i*3)/sampleRate)
+        for i in range(300):
+            r[i] = numpy.sin(numpy.pi*i*(60)/sampleRate)
+        note = r.astype(numpy.float32)
+    elif mode == 3:
+        r = numpy.zeros(fileLen)
+        for i in range(801):
+            r[i] = numpy.sin(numpy.pi*i*(18000)/sampleRate)
+        note = r.astype(numpy.float32)
+    else:
+        r = numpy.zeros(fileLen)
+        for i in range(3001):
+            r[i] = numpy.sin(numpy.pi*i*(2000+i*2)/sampleRate)
+        note = r.astype(numpy.float32)
+    return note
+
 # Plays drums from drum kit; drum beats are a set of pre-created files generated using Sound.java(?)
 def playDrum(setting, PyAudio):
 
     # This code is figuring out - where should this go in the sequence of wav files?
-    global numWavFiles
-    fileName = "test{i}.wav".format(i=numWavFiles)
-    numWavFiles += 1
+    global numDrumFiles
 
-    # This code figures out - which file is being accessed?
-    names = ["snap", "kick", "hat", "percussion"]
-    startFileName = names[setting - 1]
+    # # This code figures out - which file is being accessed?
+    # names = ["snap", "kick", "hat", "percussion"]
+    # startFileName = names[setting - 1]
+
+    n = drumSound(setting)
 
     # This code opens the sound file, copies it to the sequential wav file, and then plays the drum sound.
-    f = wave.open("audio/" + startFileName + ".wav", 'rb')
-    shutil.copyfile("audio/" + startFileName + ".wav", fileName)
-    pl = PyAudio.open(format=PyAudio.get_format_from_width(f.getsampwidth()), channels=2, rate=44100, output=True)
-    pl.write(f.readframes(200000))
+    #f = wave.open("audio/" + startFileName + "Sample.wav", 'rb')
+    # shutil.copyfile("audio/" + startFileName + ".wav", fileName)
+    
+    pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
+    pl.write(n)
     pl.stop_stream()
     pl.close()
+
+    fileName = "test{i}Drum.wav".format(i=numDrumFiles)
+    numDrumFiles += 1
+    f = wave.open(fileName, 'wb')
+    f.setnchannels(2)
+    f.setnframes(len(n))
+    f.setsampwidth(1)
+    f.setframerate(44100)
+    f.writeframes(n)
     f.close()
 
 
@@ -106,15 +170,14 @@ def waveform(hz, m):
     if m == 1:
         #generation of sine wave
         r = numpy.sin(numpy.pi*numpy.arange(0,50000,1)*(hz/sampleRate)) #formula for sine wave
-        note = r.astype(numpy.float32)
     elif m == 2:
-        #generation of sawtooth wave
-        r = numpy.arctan(1/numpy.tan(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)).astype(numpy.float32) #formula for sawtooth wave
-        note = r.astype(numpy.float32)
-    else:
         #generation of square wave
         r = numpy.round(numpy.sin(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)) #formula for square wave, math loosely inspired by https://en.wikipedia.org/wiki/Square_wave, modified heavily to fit Numpy library
-        note = r.astype(numpy.float32)
+    else:
+         #generation of sawtooth wave
+        r = numpy.arctan(1/numpy.tan(numpy.pi*numpy.arange(0,50000,1)*hz/sampleRate)) #formula for sawtooth wave
+    note = r.astype(numpy.float32)
+
     return note #sends written audio to be played
 
 
