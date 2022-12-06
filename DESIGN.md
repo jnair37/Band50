@@ -28,5 +28,6 @@ We used HTML, CSS, and Flask to create an interactive web-based user interface f
 We used Python with the library PortAudio, through PyAudio.
 
 #### Design Decisions
-* We synthesized all melodic (sine, saw, and square) sounds in 'app.py', inside of 'def waveform'. There, we used the NumPy library to generate ndarrays (created using Numpy) that were later written to a waveform. We synthesized drum sounds inside of a separate function to ensure that they could be overlaid. The drum sounds were more complexed, and they were synthesized through creating formulas to adjust the frequency of the waveforms over the length of the ndarray (created using Numpy) later written to a waveform.
+* We synthesized all melodic (sine, saw, and square) sounds in 'app.py', inside of 'def waveform'. There, we used the NumPy library to generate ndarrays (created using Numpy) that were later written to a waveform. W
+* e synthesized drum sounds inside of a separate function to ensure that they could be overlaid. The drum sounds were more complexed, and they were synthesized through creating formulas to adjust the frequency of the waveforms over the length of the ndarray (created using Numpy) later written to a waveform.
 * We mapped buttons to notes on the keyboard by using the algorithm in 'def playNote' to convert arbitrary numerical input into a specific frequency corresponding with the labelled note on the button pressed. This allowed for easy mapping that could be consistent across disparate sounds.
