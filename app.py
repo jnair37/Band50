@@ -19,19 +19,25 @@ global numWavFiles
 # Sets this so we can put a number in the file once we have multiple notes
 numWavFiles = 0
 
+# Plays a note on one of the 3 non-drum-kit instruments (waveforms)
 def playNote(note, PyAudio, mode):
 
+    # Stores frequencies for white keys in order
     freqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440, 493.88]
 
     global numWavFiles
 
+    # CLEAR feature
     if note == 9:
         numWavFiles = 0
 
+    # PLAYBACK feature
     elif note == 8:
         # Reads from wav file and plays sound
         wavList = []
+        # Make sure there are some files to play
         if numWavFiles != 0:
+            # Append all the files to test.wav
             for i in range(numWavFiles):
                 fileName = "test{j}.wav".format(j=i)
                 wavList.append(AudioSegment.from_wav(fileName))
@@ -40,6 +46,7 @@ def playNote(note, PyAudio, mode):
                 finalFile = finalFile + wavList[i]
                 finalFile.export("test.wav", format="wav")
 
+            # Play test.wav
             f = wave.open("test.wav", 'rb')
             pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
             pl.write(f.readframes(100000*numWavFiles))
@@ -47,21 +54,21 @@ def playNote(note, PyAudio, mode):
             pl.close()
             f.close()
 
+    # Note clicked
     else:
-        # hz = 440 * math.pow(2, (note-4)/12)
+        # Calculate frequency, synthesize waveform
         hz = freqs[note - 1]
         print(hz)
         n = waveform(hz, mode)
         print(len(n))
 
-        # Plays sound immediately
+        # Play sound immediately
         pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
         pl.write(n)
         pl.stop_stream()
         pl.close()
 
         # Writes to wav file
-        
         fileName = "test{i}.wav".format(i=numWavFiles)
         numWavFiles += 1
         f = wave.open(fileName, 'wb')
@@ -72,22 +79,21 @@ def playNote(note, PyAudio, mode):
         f.writeframes(n)
         f.close()
 
+# Plays drums from drum kit; drum beats are a set of pre-created files generated using Sound.java(?)
 def playDrum(setting, PyAudio):
+
+    # This code is figuring out - where should this go in the sequence of wav files?
     global numWavFiles
     fileName = "test{i}.wav".format(i=numWavFiles)
     numWavFiles += 1
-    if setting == 1:
-        f = wave.open("audio/snap.wav", 'rb')
-        shutil.copyfile("audio/snap.wav", fileName)
-    elif setting == 2:
-        f = wave.open("audio/kick.wav", 'rb')
-        shutil.copyfile("audio/kick.wav", fileName)
-    elif setting == 3:
-        f = wave.open("audio/hat.wav", 'rb')
-        shutil.copyfile("audio/hat.wav", fileName)
-    else: 
-        f = wave.open("audio/percussion.wav", 'rb')
-        shutil.copyfile("audio/percussion.wav", fileName)
+
+    # This code figures out - which file is being accessed?
+    names = ["snap", "kick", "hat", "percussion"]
+    startFileName = names[setting - 1]
+
+    # This code opens the sound file, copies it to the sequential wav file, and then plays the drum sound.
+    f = wave.open("audio/" + startFileName + ".wav", 'rb')
+    shutil.copyfile("audio/" + startFileName + ".wav", fileName)
     pl = PyAudio.open(format=PyAudio.get_format_from_width(f.getsampwidth()), channels=2, rate=44100, output=True)
     pl.write(f.readframes(200000))
     pl.stop_stream()
@@ -133,7 +139,7 @@ def after_request(response):
 
 # New Flask code:
 
-
+# Basic renders for index and about pages
 @app.route("/")
 @app.route("/index")
 def index():
@@ -143,6 +149,10 @@ def index():
 def about():
     return render_template("about.html")
 
+
+# POST is used when a button has been pressed, so this both renders
+# the page and responds appropriately to button inputs
+# Xylophone is now sine wave
 @app.route("/xylo", methods=["GET", "POST"])
 def inst1():
     if (request.method=="POST"):
@@ -151,6 +161,7 @@ def inst1():
         PyAudio.terminate()
     return render_template("xylo.html")
 
+# Same for other instruments
 @app.route("/inst2", methods=["GET", "POST"])
 def inst2():
     if (request.method=="POST"):

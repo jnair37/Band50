@@ -15,6 +15,7 @@ We used HTML, CSS, and Flask to create an interactive web-based user interface f
     * display-1, display-2, lead (display fonts)
     * ml-2 (margins)
     * text-center, text-left (alignment)
+    * Row, col, card
     * Note; lot of redundancy to be removed probably
 * 
 * Writing to individual `.wav` files -- will make it easier to overlay stuff later
