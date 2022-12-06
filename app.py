@@ -19,6 +19,24 @@ global numWavFiles
 # Sets this so we can put a number in the file once we have multiple notes
 numWavFiles = 0
 
+def writeToWav(n):
+    global numWavFiles
+    fileName = "test{i}.wav".format(i=numWavFiles)
+    numWavFiles += 1
+    f = wave.open(fileName, 'wb')
+    f.setnchannels(2)
+    f.setnframes(len(n))
+    f.setsampwidth(1)
+    f.setframerate(44100)
+    f.writeframes(n)
+    f.close()
+
+def playSound(n, PyAudio):
+    pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
+    pl.write(n)
+    pl.stop_stream()
+    pl.close()
+
 # Plays a note on one of the 3 non-drum-kit instruments (waveforms)
 def playNote(note, PyAudio, mode):
 
@@ -64,24 +82,15 @@ def playNote(note, PyAudio, mode):
         print(len(n))
 
         # Play sound immediately
-        pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
-        pl.write(n)
-        pl.stop_stream()
-        pl.close()
+        playSound(n, PyAudio)
 
         # Writes to wav file
-        fileName = "test{i}.wav".format(i=numWavFiles)
-        numWavFiles += 1
-        f = wave.open(fileName, 'wb')
-        f.setnchannels(2)
-        f.setnframes(len(n))
-        f.setsampwidth(1)
-        f.setframerate(44100)
-        f.writeframes(n)
-        f.close()
+        writeToWav(n)
 
 # Synthesize a drum sound based on input
 def drumSound(mode):
+    if mode == 8 or mode == 9:
+        print("this has been called.")
     sampleRate = 44100.0
     fileLen = 20000
 
@@ -121,25 +130,15 @@ def playDrum(setting, PyAudio):
 
     global numWavFiles
 
+    if setting == 8 or setting == 9:
+        print("play drum has been called.")
     n = drumSound(setting)
     
     # Play sound aloud immediately
-    pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
-    pl.write(n)
-    pl.stop_stream()
-    pl.close()
+    playSound(n, PyAudio)
 
     # Write to wav file
-    fileName = "test{i}.wav".format(i=numWavFiles)
-    numWavFiles += 1
-    f = wave.open(fileName, 'wb')
-    f.setnchannels(2)
-    f.setnframes(len(n))
-    f.setsampwidth(1)
-    f.setframerate(44100)
-    f.writeframes(n)
-    f.close()
-
+    writeToWav(n)
 
 def waveform(hz, m):
     sampleRate = 44100.0 #define sample rate
@@ -188,7 +187,6 @@ def about():
 
 # POST is used when a button has been pressed, so this both renders
 # the page and responds appropriately to button inputs
-# Xylophone is now sine wave
 @app.route("/inst1", methods=["GET", "POST"])
 def inst1():
     if (request.method=="POST"):
@@ -219,7 +217,11 @@ def inst3():
 def inst4():
     if (request.method=="POST"):
         PyAudio = pyaudio.PyAudio()
-        playDrum(int(request.form["button"]), PyAudio)
+        # If we're pressing playback or clear, then we call playNote() anyway
+        if request.form["button"] == "8" or request.form["button"] == "9":
+            playNote(int(request.form["button"]), PyAudio, 4)
+        else:
+            playDrum(int(request.form["button"]), PyAudio)
         PyAudio.terminate()
     return render_template("inst4.html")
 
