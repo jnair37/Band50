@@ -24,7 +24,6 @@ We developed an online music creation platform with digital instrumentation and 
   * PyAudio
   * Pydub
   * Wave
-  * ffmpeg-python
 
 
 ### How to Install
