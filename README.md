@@ -9,16 +9,17 @@ We developed an online music creation platform with digital instrumentation and 
 ### Features
 
 * 4 digital instruments (sine wave, square wave, saw wave and drum kit) which can all be played through the website
-* The user can play the instruments and playback 
-the audio 
+* The user can play the instruments and playback the audio 
 * The user can clear the audio and start over
 
-### Installation Prerequisites
+### Installation Prerequisites & Dependencies
 
 * VSCode or an equivalent editor/IDE that supports Python, web languages, and a terminal
 * Python
 * Flask
 * The following Python modules which can be installed via pip:
+  * Flask-Session
+  * ffmpeg-python
   * Numpy
   * PyAudio
   * Pydub
@@ -42,7 +43,6 @@ Here's how to use our platform!
 * Use the PLAYBACK button to hear your work. 
 * Use the CLEAR button to start over. 
 
-###
-* TODO: test test test !!!
+### Link to Video
 
-
+https://www.youtube.com/watch?v=wS1em_-WNdg
