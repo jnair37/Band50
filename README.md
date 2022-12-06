@@ -31,7 +31,6 @@ the audio
 * Go to VSCode --> File --> Open Folder --> and then
 navigate to where the folder is stored
 * Once you've opened the folder, enter 'python -m flask run' into the terminal
-    * TODO: What about the API key :(
 * The site should then run locally on your computer
 * Follow the instructions in the 'about' page to receive guidance on how to interact with the platform
 
