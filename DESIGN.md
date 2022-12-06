@@ -21,7 +21,7 @@ We used HTML, CSS, and Flask to create an interactive web-based user interface f
 * Writing to individual `.wav` files -- will make it easier to overlay stuff later
     * We could also delete one note at a time lol
 * Each instrument on a separate webpage: felt like an intuitive way of ...
-* Buttons for notes -- definitely a process to get here.
+* We created buttons to represent each note in the C Major scale. We chose this scale and these notes to simplify usage for users who may not have been exposed to music theory. Each button is labelled with its note and a numerical value, which is then interpreted in 'app.py', where it is either used to calculate a frequency value or used as an indicator to play back or clear audio. For the drum kit, we used similar buttons that, instead of representing notes on the scale, represented elements of a drum kit, and we labelled these buttons as such.
 
 ### Sound Synthesis
 
