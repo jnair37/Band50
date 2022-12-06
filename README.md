@@ -12,7 +12,7 @@ We developed an online music creation platform with digital instrumentation and 
 * The user can play the instruments and playback 
 the audio 
 * The user can clear the audio and start over
-* TODO: overlay audio
+* Overlay audio of drum and synth sounds
 
 ### Installation Prerequisites
 
