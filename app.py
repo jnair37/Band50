@@ -15,11 +15,9 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 
 global numWavFiles
-global numDrumFiles
 
 # Sets this so we can put a number in the file once we have multiple notes
 numWavFiles = 0
-numDrumFiles = 0
 
 # Plays a note on one of the 3 non-drum-kit instruments (waveforms)
 def playNote(note, PyAudio, mode):
@@ -28,12 +26,10 @@ def playNote(note, PyAudio, mode):
     freqs = [261.63, 293.66, 329.63, 349.23, 392.00, 440, 493.88]
 
     global numWavFiles
-    global numDrumFiles
 
     # CLEAR feature
     if note == 9:
         numWavFiles = 0
-        numDrumFiles = 0
 
     # PLAYBACK feature
     elif note == 8:
@@ -49,32 +45,10 @@ def playNote(note, PyAudio, mode):
             for i in range(1, len(wavList)):
                 finalFile = finalFile + wavList[i]
                 finalFile.export("test.wav", format="wav")
-            notes = AudioSegment.from_wav("test.wav")
-            if numDrumFiles == 0:
-                overlay = notes
             
-        if numDrumFiles != 0:
-            # Append all the files to testDrum.wav
-            wavList = []
-            for i in range(numDrumFiles):
-                fileName = "test{j}Drum.wav".format(j=i)
-                wavList.append(AudioSegment.from_wav(fileName))
-            finalFile = wavList[0]
-            for i in range(1, len(wavList)):
-                finalFile = finalFile + wavList[i]
-                finalFile.export("testDrum.wav", format="wav")
-            
-            drums = AudioSegment.from_wav("testDrum.wav")
-            if numWavFiles == 0:
-                overlay = drums
-            else:
-                overlay = notes.overlay(drums)
-    
-        if numWavFiles != 0 or numDrumFiles != 0:
-            overlay.export("testFinal.wav", format="wav")
 
             # Play test.wav
-            f = wave.open("testFinal.wav", 'rb')
+            f = wave.open("test.wav", 'rb')
             pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
             pl.write(f.readframes(100000*numWavFiles))
             pl.stop_stream()
@@ -136,26 +110,17 @@ def drumSound(mode):
 # Plays drums from drum kit; drum beats are a set of pre-created files generated using Sound.java(?)
 def playDrum(setting, PyAudio):
 
-    # This code is figuring out - where should this go in the sequence of wav files?
-    global numDrumFiles
-
-    # # This code figures out - which file is being accessed?
-    # names = ["snap", "kick", "hat", "percussion"]
-    # startFileName = names[setting - 1]
+    global numWavFiles
 
     n = drumSound(setting)
-
-    # This code opens the sound file, copies it to the sequential wav file, and then plays the drum sound.
-    #f = wave.open("audio/" + startFileName + "Sample.wav", 'rb')
-    # shutil.copyfile("audio/" + startFileName + ".wav", fileName)
     
     pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
     pl.write(n)
     pl.stop_stream()
     pl.close()
 
-    fileName = "test{i}Drum.wav".format(i=numDrumFiles)
-    numDrumFiles += 1
+    fileName = "test{i}.wav".format(i=numWavFiles)
+    numWavFiles += 1
     f = wave.open(fileName, 'wb')
     f.setnchannels(2)
     f.setnframes(len(n))
@@ -223,6 +188,7 @@ def inst1():
         playNote(int(request.form["button"]), PyAudio, 1)
         PyAudio.terminate()
     return render_template("xylo.html")
+
 
 # Same for other instruments
 @app.route("/inst2", methods=["GET", "POST"])
