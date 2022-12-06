@@ -13,7 +13,7 @@ We used HTML, CSS, and Flask to create an interactive web-based user interface f
 * Basic structure: We decided to include a home page which would link to each instrument, an about page which would explain how to use the platform, and a page for each instrument as well as a navbar with a dropdown so that users could easily switch between instruments and play back their work at any time. 
 * HTML templating/extending: We extended all the webpages from `layout.html`, including another template, `inst.html`, from which the four instrument pages all extended. This reduced redundancy and made it easier to implement formatting changes to many pages on the website at a time.
 * Bootstrap Components: We used several of Bootstrap's components and CSS classes in order to improve the website's aesthetics and organization. 
-    * Navbar (component used in `layout.html`)
+    * `navbar` (component used in `layout.html`)
     * `display-1`, `display-2`, `lead` (display fonts)
     * `ml-2` (margins)
     * `text-center`, `text-left` (alignment)
