@@ -23,6 +23,7 @@ the audio
   * PyAudio
   * Pydub
   * Wave
+  * ffmpeg-python
 
 
 ### How to Install
