@@ -80,14 +80,19 @@ def playNote(note, PyAudio, mode):
         f.writeframes(n)
         f.close()
 
+# Synthesize a drum sound based on input
 def drumSound(mode):
     sampleRate = 44100.0
     fileLen = 20000
+
+    # Snap
     if mode == 1:
         r = numpy.zeros(fileLen)
         for i in range(231):
             r[i] = numpy.sin(numpy.pi*i*(6000-i*3)/sampleRate)
         note = r.astype(numpy.float32)
+
+    # Kick
     elif mode == 2:
         r = numpy.zeros(fileLen)
         for i in range(96):
@@ -95,11 +100,15 @@ def drumSound(mode):
         for i in range(300):
             r[i] = numpy.sin(numpy.pi*i*(60)/sampleRate)
         note = r.astype(numpy.float32)
+    
+    # Hat
     elif mode == 3:
         r = numpy.zeros(fileLen)
         for i in range(801):
             r[i] = numpy.sin(numpy.pi*i*(18000)/sampleRate)
         note = r.astype(numpy.float32)
+    
+    # Laser
     else:
         r = numpy.zeros(fileLen)
         for i in range(3001):
@@ -114,11 +123,13 @@ def playDrum(setting, PyAudio):
 
     n = drumSound(setting)
     
+    # Play sound aloud immediately
     pl = PyAudio.open(format = pyaudio.paFloat32, channels=2, rate=44100, output=True)
     pl.write(n)
     pl.stop_stream()
     pl.close()
 
+    # Write to wav file
     fileName = "test{i}.wav".format(i=numWavFiles)
     numWavFiles += 1
     f = wave.open(fileName, 'wb')
@@ -181,13 +192,13 @@ def about():
 # POST is used when a button has been pressed, so this both renders
 # the page and responds appropriately to button inputs
 # Xylophone is now sine wave
-@app.route("/xylo", methods=["GET", "POST"])
+@app.route("/inst1", methods=["GET", "POST"])
 def inst1():
     if (request.method=="POST"):
         PyAudio = pyaudio.PyAudio()
         playNote(int(request.form["button"]), PyAudio, 1)
         PyAudio.terminate()
-    return render_template("xylo.html")
+    return render_template("inst1.html")
 
 
 # Same for other instruments
