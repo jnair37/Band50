@@ -28,8 +28,9 @@ We developed an online music creation platform with digital instrumentation and 
 
 ### How to Install
 
-* Download this folder to your machine, right click it and select "Extract All" 
+* Download this folder to your machine, right click it and select "Extract All".
 * Using VSCode for browser can bring up problems with the dependencies, so we suggest using VSCode for desktop.
+* Open the inner folder `Band50-master` within VSCode.
 * Install Python and any of the above dependencies using `pip install dependency-name` as necessary.
 * Once you've opened the folder in VSCode and have all the dependencies, enter 'python -m flask run' into the terminal
 * The site should then run locally on your computer
