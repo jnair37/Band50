@@ -39,7 +39,7 @@ We developed an online music creation platform with digital instrumentation and 
 
 Here's how to use our platform!
 * Click from the "Instruments" dropdown or one of the cards on the home page to select an instrument.
-* Get creative! Play whatever notes or drum sounds you want and switch instruments at any time. 
+* Get creative! Play whatever notes or drum sounds you want by clicking the buttons and switch instruments at any time. 
 * Use the PLAYBACK button to hear your work. 
 * Use the CLEAR button to start over. 
 
