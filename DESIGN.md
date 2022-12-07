@@ -6,7 +6,7 @@
 
 ### Interactive Interface
 
-We used HTML, CSS, and Flask to create an interactive web-based user interface for the platform. 
+We used HTML, CSS (through Bootstrap), and Flask to create an interactive web-based user interface for the platform. 
 
 #### Design Decisions
 * Using Flask: Since we wanted a very interactive web interface as well as complex sound generation algorithms in the back end, it made the most sense to integrate Python code with HTML/CSS using Flask.
