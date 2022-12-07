@@ -33,7 +33,7 @@ We developed an online music creation platform with digital instrumentation and 
 * Install Python and any of the above dependencies using `pip install dependency-name` as necessary.
 * Once you've opened the folder in VSCode and have all the dependencies, enter 'python -m flask run' into the terminal
 * The site should then run locally on your computer
-* Follow the instructions in the 'about' page to receive guidance on how to interact with the platform
+* Follow the instructions in the 'About' page or below to receive guidance on how to interact with the platform
 
 ### How to Use
 
