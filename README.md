@@ -15,9 +15,9 @@ We developed an online music creation platform with digital instrumentation and 
 ### Installation Prerequisites & Dependencies
 
 * VSCode or an equivalent editor/IDE that supports Python, web languages, and a terminal
-* Python
-* Flask
-* The following Python modules which can be installed via pip:
+* Python (downloaded as per the instructions at https://code.visualstudio.com/docs/languages/python)
+* The following Python modules which can be installed via `pip install`:
+  * Flask
   * Flask-Session
   * ffmpeg-python
   * Numpy
@@ -28,10 +28,10 @@ We developed an online music creation platform with digital instrumentation and 
 
 ### How to Install
 
-* Download this folder to your machine
-* Go to VSCode --> File --> Open Folder --> and then
-navigate to where the folder is stored
-* Once you've opened the folder, enter 'python -m flask run' into the terminal
+* Download this folder to your machine, right click it and select "Extract All" 
+* Using VSCode for browser can bring up problems with the dependencies, so we suggest using VSCode for desktop.
+* Install Python and any of the above dependencies using `pip install dependency-name` as necessary.
+* Once you've opened the folder in VSCode and have all the dependencies, enter 'python -m flask run' into the terminal
 * The site should then run locally on your computer
 * Follow the instructions in the 'about' page to receive guidance on how to interact with the platform
 
